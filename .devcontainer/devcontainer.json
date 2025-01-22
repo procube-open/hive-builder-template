@@ -1,0 +1,13 @@
+{
+    "name": "hive-builder template container",
+    "dockerFile": "Dockerfile",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.copilot",
+                "redhat.ansible",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}
