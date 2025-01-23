@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "Setup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "setup.py",
+            "console": "integratedTerminal",
+        }
+    ]
+}

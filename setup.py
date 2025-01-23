@@ -4,9 +4,16 @@ import yaml
 import inquirer
 import time
 
+
+def name_validation(answers, current):
+    if len(current) == 0:
+        return False
+    return True
+
 questions = [
     inquirer.Text('name',
                   message="What's hive name?",
+                  validate=name_validation,
                   ),
     inquirer.List('stage',
                   message="What stage do you want to use?",
@@ -47,6 +54,7 @@ if answers['provider'] == 'vagrant':
         print('Vagrant is not installed')
         print('Automatically start installation after 3 seconds.')
         time.sleep(3)
+        subprocess.run(['sudo', 'apt-get', 'update'])
         subprocess.run(['sudo', 'apt-get', 'install', '-y',
                        'vagrant-libvirt', 'libvirt-daemon-system'])
 elif answers['provider'] == 'gcp' and not os.path.exists('gcp_credential.json'):
