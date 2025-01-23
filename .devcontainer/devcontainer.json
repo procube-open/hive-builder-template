@@ -1,13 +1,21 @@
 {
     "name": "hive-builder template container",
     "dockerFile": "Dockerfile",
+    "features":{
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
+    "overrideCommand": false,
+    "privileged": true,
     "customizations": {
         "vscode": {
             "extensions": [
                 "GitHub.copilot",
                 "redhat.ansible",
                 "ms-azuretools.vscode-docker"
-            ]
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/opt/hive/bin/python"
+            }
         }
     }
 }
