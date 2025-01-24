@@ -1,9 +1,12 @@
 import subprocess
+import getpass
 import os
 import yaml
 import inquirer
 import time
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+user = getpass.getuser()
 
 def name_validation(answers, current):
     if len(current) == 0:
@@ -40,6 +43,8 @@ questions = [
 ]
 answers = inquirer.prompt(questions)
 
+subprocess.run(['hive', 'set', 'stage', answers['stage']])
+
 # install dependencies
 print('--- Install dependencies ---')
 if not os.path.exists('.collections'):
@@ -47,24 +52,24 @@ if not os.path.exists('.collections'):
     print('Automatically start installation after 3 seconds.')
     time.sleep(3)
     subprocess.run(['hive', 'install-collection'])
+    print('Ansible collection is installed')
 if answers['provider'] == 'vagrant':
     try:
-        subprocess.run(['vagrant', '--version'])
+        subprocess.run(['vagrant', '--version'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
     except FileNotFoundError:
         print('Vagrant is not installed')
         print('Automatically start installation after 3 seconds.')
         time.sleep(3)
-        subprocess.run(['sudo', 'apt-get', 'update'])
-        subprocess.run(['sudo', 'apt-get', 'install', '-y',
-                       'vagrant-libvirt', 'libvirt-daemon-system'])
+        subprocess.run([current_dir + '/install-vagrant.sh'], user=user, cwd=current_dir)
+        print('Vagrant is installed')
 elif answers['provider'] == 'gcp' and not os.path.exists('gcp_credential.json'):
-    gcp_credential = inquirer.prompt([
+    gcp_answers = inquirer.prompt([
         inquirer.Editor('gcp_credential',
                         message="Please enter your GCP credential",
                         )
     ])
     with open('gcp_credential.json', 'w') as file:
-        file.write(gcp_credential['gcp_credential'])
+        file.write(gcp_answers['gcp_credential'])
 print('--- Install dependencies is done ---')
 
 # Update hive.yml
