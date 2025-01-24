@@ -1,0 +1,6 @@
+---
+plugin: hive_services
+services:
+  test:
+    image: almalinux/9-init
+    standalone: True

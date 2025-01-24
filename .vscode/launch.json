@@ -4,7 +4,7 @@
             "name": "Setup",
             "type": "debugpy",
             "request": "launch",
-            "program": "setup.py",
+            "program": "setup/setup.py",
             "console": "integratedTerminal",
         }
     ]

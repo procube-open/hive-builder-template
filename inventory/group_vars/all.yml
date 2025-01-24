@@ -1,0 +1,2 @@
+hive_kernel_version: 5.14.0-503.15.1.el9_5.x86_64
+hive_drbd_download_url: https://github.com/procube-open/drbd9-rpm/releases/download/Latests/drbd-9.2.12-v9.29.0-5.14.0-503.15.1.el9_5.x86_64.tar.gz

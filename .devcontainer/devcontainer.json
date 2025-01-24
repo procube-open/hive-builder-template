@@ -1,9 +1,6 @@
 {
     "name": "hive-builder template container",
     "dockerFile": "Dockerfile",
-    // "features":{
-    //     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-    // },
     "overrideCommand": false,
     "privileged": true,
     "customizations": {
@@ -12,7 +9,8 @@
                 "redhat.ansible"
             ],
             "settings": {
-                "python.defaultInterpreterPath": "/opt/hive/bin/python"
+                "python.defaultInterpreterPath": "/opt/hive/bin/python",
+                "python.terminal.activateEnvInCurrentTerminal": true
             }
         }
     }
