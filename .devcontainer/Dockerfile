@@ -12,6 +12,6 @@ RUN /opt/hive/bin/pip install --upgrade pip
 RUN /opt/hive/bin/pip install ansible-core setuptools hive-builder inquirer
 
 # Setup bash completion
-RUN echo "source \$(hive get-install-dir)/hive-completion.sh" >> /home/vscode/.bashrc
+RUN echo "source \$(/opt/hive/bin/hive get-install-dir)/hive-completion.sh" >> /home/vscode/.bashrc
 
 ENTRYPOINT ["/sbin/init"]

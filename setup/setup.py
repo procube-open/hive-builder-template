@@ -6,6 +6,7 @@ import inquirer
 import time
 
 user = getpass.getuser()
+dir = os.path.dirname(__file__)
 
 def name_validation(answers, current):
     if len(current) == 0:
@@ -59,8 +60,8 @@ if answers['provider'] == 'vagrant':
         print('Vagrant is not installed')
         print('Automatically start installation after 3 seconds.')
         time.sleep(3)
-        subprocess.run(['install-vagrant.sh'], user=user)
-        subprocess.run(['install-squid.sh'])
+        subprocess.run([dir + '/install-vagrant.sh'], user=user)
+        # subprocess.run([dir + '/install-squid.sh'])
         print('Vagrant is installed')
 elif answers['provider'] == 'gcp' and not os.path.exists('gcp_credential.json'):
     gcp_answers = inquirer.prompt([
