@@ -12,6 +12,6 @@ vagrant plugin install vagrant-libvirt
 
 # Setup libvirt
 script_dir=$(dirname "$0")
-sudo cp $script_dir/org.freedesktop.PolicyKit1.conf /etc/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
+sudo cp $script_dir/files/org.freedesktop.PolicyKit1.conf /etc/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 sudo usermod -aG libvirt $USER
 sudo systemctl restart libvirtd dbus polkit

@@ -1,3 +1,4 @@
 .hive
 .env
 .collections
+gcp_credential.json

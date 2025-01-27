@@ -60,7 +60,7 @@ if answers['provider'] == 'vagrant':
         print('Automatically start installation after 3 seconds.')
         time.sleep(3)
         subprocess.run(['install-vagrant.sh'], user=user)
-        subprocess.run(['setup-proxy.sh'])
+        subprocess.run(['install-squid.sh'])
         print('Vagrant is installed')
 elif answers['provider'] == 'gcp' and not os.path.exists('gcp_credential.json'):
     gcp_answers = inquirer.prompt([

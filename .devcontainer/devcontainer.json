@@ -6,7 +6,8 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "redhat.ansible"
+                "redhat.ansible",
+                "docsmsft.docs-yaml"
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/opt/hive/bin/python",
