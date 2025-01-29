@@ -1,4 +1,4 @@
-name: test
+name: tmpl
 plugin: hive_inventory
 stages:
   private:
@@ -6,3 +6,15 @@ stages:
     number_of_hosts: 3
     provider: vagrant
     separate_repository: false
+  staging:
+    cidr: 192.168.0.0/16
+    number_of_hosts: 3
+    provider: gcp
+    separate_repository: false
+    disk_size: 20
+    repository_disk_size: 20
+    mirrored_disk_size: 20
+    region: asia-northeast2
+    repository_instance_type: n1-standard-2
+    instance_type: n1-standard-2
+

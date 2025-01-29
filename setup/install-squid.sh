@@ -1,6 +1,6 @@
 #!/bin/bash
+script_dir=$(dirname $0)
 
-sudo apt-get -y install squid-openssl
-sudo systemctl start squid
-
-/opt/hive/bin/hive set http_proxy localhost:3128
+sudo apt-get -y install squid
+sudo cp $script_dir/files/squid.conf /etc/squid/squid.conf
+sudo systemctl restart squid

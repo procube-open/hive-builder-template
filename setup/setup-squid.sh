@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#必要なし
 systemctl stop squid
 
 script_dir=$(dirname "$0")
