@@ -1,7 +1,9 @@
 FROM mcr.microsoft.com/vscode/devcontainers/python:3
 
 RUN apt-get update
-RUN apt-get install -y vim systemd
+RUN apt-get install -y vim tcpdump network-manager
+
+RUN apt-get install -y systemd
 RUN ln -sf /lib/systemd/systemd /sbin/init
 
 # Make virtual environment

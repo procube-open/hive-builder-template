@@ -8,12 +8,14 @@ import time
 user = getpass.getuser()
 dir = os.path.dirname(__file__)
 
-def name_validation(answers, current):
+
+def name_validation(base_answers, current):
     if len(current) == 0:
         return False
     return True
 
-questions = [
+
+base_questions = [
     inquirer.Text('name',
                   message="What's hive name?",
                   validate=name_validation,
@@ -41,9 +43,15 @@ questions = [
                   default='3',
                   )
 ]
-answers = inquirer.prompt(questions)
+gcp_questions = [
+    inquirer.Editor('gcp_credential',
+                    message="Please paste GCP credential here"
+                    )
+]
 
-subprocess.run(['hive', 'set', 'stage', answers['stage']])
+base_answers = inquirer.prompt(base_questions)
+
+subprocess.run(['hive', 'set', 'stage', base_answers['stage']])
 
 # install dependencies
 print('--- Install dependencies ---')
@@ -53,7 +61,7 @@ if not os.path.exists('.collections'):
     time.sleep(3)
     subprocess.run(['hive', 'install-collection'])
     print('Ansible collection is installed')
-if answers['provider'] == 'vagrant':
+if base_answers['provider'] == 'vagrant':
     try:
         subprocess.run(['vagrant', '--version'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
     except FileNotFoundError:
@@ -61,14 +69,18 @@ if answers['provider'] == 'vagrant':
         print('Automatically start installation after 3 seconds.')
         time.sleep(3)
         subprocess.run([dir + '/install-vagrant.sh'], user=user)
-        # subprocess.run([dir + '/install-squid.sh'])
-        print('Vagrant is installed')
-elif answers['provider'] == 'gcp' and not os.path.exists('gcp_credential.json'):
-    gcp_answers = inquirer.prompt([
-        inquirer.Editor('gcp_credential',
-                        message="Please paste GCP credential here",
-                        )
-    ])
+        print('Vagrant is successfully installed')
+    try:
+        subprocess.run(['squid', '--version'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    except FileNotFoundError:
+        print('squid is not installed')
+        print('Automatically start installation after 3 seconds.')
+        time.sleep(3)
+        subprocess.run([dir + '/install-squid.sh'])
+        print('squid is successfully installed')
+    subprocess.run(['hive', 'set', 'vagrant_proxy', 'http://192.168.121.1:3128'])
+elif base_answers['provider'] == 'gcp' and not os.path.exists('gcp_credential.json'):
+    gcp_answers = inquirer.prompt(gcp_questions)
     with open('gcp_credential.json', 'w') as file:
         file.write(gcp_answers['gcp_credential'])
 print('--- Install dependencies is done ---')
@@ -78,28 +90,26 @@ hive_yml = None
 print('--- Update hive.yml ---')
 with open('inventory/hive.yml') as file:
     hive_yml = yaml.load(file, Loader=yaml.FullLoader)
-if hive_yml['name'] != answers['name']:
-    print('hive name is changed:' +
-          hive_yml['name'] + ' -> ' + answers['name'])
-    hive_yml['name'] = answers['name']
-if hive_yml['stages'][answers['stage']]['provider'] != answers['provider']:
-    print('provider is changed:' +
-          hive_yml['stages'][answers['stage']]['provider'] + ' -> ' + answers['provider'])
-    hive_yml['stages'][answers['stage']]['provider'] = answers['provider']
-if hive_yml['stages'][answers['stage']]['cidr'] != answers['cidr']:
-    print('cidr is changed:' +
-          hive_yml['stages'][answers['stage']]['cidr'] + ' -> ' + answers['cidr'])
-    hive_yml['stages'][answers['stage']]['cidr'] = answers['cidr']
-if hive_yml['stages'][answers['stage']]['separate_repository'] != answers['separate_repository']:
-    print('separate_repository is changed:' +
-          str(hive_yml['stages'][answers['stage']]['separate_repository']) + ' -> ' + str(answers['separate_repository']))
-    hive_yml['stages'][answers['stage']
-                       ]['separate_repository'] = answers['separate_repository']
-if hive_yml['stages'][answers['stage']]['number_of_hosts'] != int(answers['number_of_hosts']):
-    print('number_of_hosts is changed:' +
-          str(hive_yml['stages'][answers['stage']]['number_of_hosts']) + ' -> ' + answers['number_of_hosts'])
-    hive_yml['stages'][answers['stage']]['number_of_hosts'] = int(
-        answers['number_of_hosts'])
+
+if hive_yml['name'] != base_answers['name']:
+    print('hive name is changed:' + hive_yml['name'] + ' -> ' + base_answers['name'])
+    hive_yml['name'] = base_answers['name']
+if not hive_yml['stages'][base_answers['stage']]:
+    print('stage is added:' + base_answers['stage'])
+    hive_yml['stages'][base_answers['stage']] = {}
+base_answers['number_of_hosts'] = int(base_answers['number_of_hosts'])
+del base_answers['name']
+
+for key in base_answers:
+    if key == 'stage':
+        continue
+    elif key not in hive_yml['stages'][base_answers['stage']]:
+        print(key + ' is added:' + str(base_answers[key]))
+        hive_yml['stages'][base_answers['stage']][key] = base_answers[key]
+    elif hive_yml['stages'][base_answers['stage']][key] != base_answers[key]:
+        print(key + ' is changed:' + str(hive_yml['stages'][base_answers['stage']][key]) + ' -> ' + str(base_answers[key]))
+        hive_yml['stages'][base_answers['stage']][key] = base_answers[key]
+
 with open('inventory/hive.yml', 'w') as file:
     yaml.dump(hive_yml, file)
 print('--- Update hive.yml is done ---')

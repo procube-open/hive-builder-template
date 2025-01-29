@@ -7,11 +7,14 @@
         "vscode": {
             "extensions": [
                 "redhat.ansible",
-                "docsmsft.docs-yaml"
+                "redhat.vscode-yaml"
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/opt/hive/bin/python",
-                "python.terminal.activateEnvInCurrentTerminal": true
+                "python.terminal.activateEnvInCurrentTerminal": true,
+                "autopep8.args": [
+                    "--max-line-length=200"
+                ]
             }
         }
     }

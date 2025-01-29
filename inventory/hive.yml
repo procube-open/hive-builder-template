@@ -3,18 +3,20 @@ plugin: hive_inventory
 stages:
   private:
     cidr: 192.168.0.0/16
-    number_of_hosts: 3
+    number_of_hosts: 1
     provider: vagrant
     separate_repository: false
+    memory_size: 4096
+    repository_memory_size: 4096
+    cpus: 2
   staging:
     cidr: 192.168.0.0/16
+    disk_size: 20
+    instance_type: n1-standard-2
+    mirrored_disk_size: 20
     number_of_hosts: 3
     provider: gcp
-    separate_repository: false
-    disk_size: 20
-    repository_disk_size: 20
-    mirrored_disk_size: 20
     region: asia-northeast2
+    repository_disk_size: 20
     repository_instance_type: n1-standard-2
-    instance_type: n1-standard-2
-
+    separate_repository: false
