@@ -2,21 +2,21 @@ name: tmpl
 plugin: hive_inventory
 stages:
   private:
-    cidr: 192.168.0.0/16
-    number_of_hosts: 1
     provider: vagrant
+    cidr: 192.168.0.0/16
     separate_repository: false
+    number_of_hosts: 1
+    cpus: 2
     memory_size: 4096
     repository_memory_size: 4096
-    cpus: 2
   staging:
-    cidr: 192.168.0.0/16
-    disk_size: 20
-    instance_type: n1-standard-2
-    mirrored_disk_size: 20
-    number_of_hosts: 3
     provider: gcp
-    region: asia-northeast2
-    repository_disk_size: 20
-    repository_instance_type: n1-standard-2
+    cidr: 192.168.0.0/16
     separate_repository: false
+    number_of_hosts: 3
+    region: asia-northeast2
+    instance_type: n1-standard-2
+    repository_instance_type: n1-standard-2
+    disk_size: 20
+    mirrored_disk_size: 20
+    repository_disk_size: 20
