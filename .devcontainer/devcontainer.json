@@ -3,6 +3,9 @@
     "dockerFile": "Dockerfile",
     "overrideCommand": false,
     "privileged": true,
+    "remoteEnv": {
+        "ANSIBLE_CONFIG": "/var/tmp/hive/ansible.cfg"
+    },
     "customizations": {
         "vscode": {
             "extensions": [
@@ -14,7 +17,9 @@
                 "python.terminal.activateEnvInCurrentTerminal": true,
                 "autopep8.args": [
                     "--max-line-length=200"
-                ]
+                ],
+                "ansible.python.interpreterPath": "/opt/hive/bin/python",
+                "ansible.playbook.arguments": "-e @/var/tmp/hive/vars.yml"
             }
         }
     }
