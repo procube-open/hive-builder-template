@@ -136,6 +136,9 @@
                                             "volume"
                                         ]
                                     },
+                                    "source": {
+                                        "type": "string"
+                                    },
                                     "target": {
                                         "type": "string"
                                     },
