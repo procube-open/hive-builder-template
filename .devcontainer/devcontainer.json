@@ -20,7 +20,7 @@
                 ],
                 "ansible.python.interpreterPath": "/opt/hive/bin/python",
                 "ansible.playbook.arguments": "-e @/var/tmp/hive/vars.yml",
-                "ansible.validation.lint.arguments": "-c ${workspaceFolder}/.vscode/configs/ansible-lint.yml"
+                "ansible.validation.lint.arguments": "-c .vscode/configs/ansible-lint.yml"
             }
         }
     }

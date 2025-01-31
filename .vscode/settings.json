@@ -1,5 +1,7 @@
 {
     "python.analysis.typeCheckingMode": "standard",
+    "ansible.ansible.useFullyQualifiedCollectionNames": true,
+    "ansible.validation.lint.enabled": true,
     "yaml.format.enable": true,
     "yaml.completion": true,
     "yaml.validate": true,
