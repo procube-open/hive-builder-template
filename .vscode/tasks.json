@@ -4,7 +4,7 @@
         {
             "label": "ansible-lint",
             "type": "shell",
-            "command": "ansible-lint",
+            "command": "/opt/hive/bin/ansible-lint",
             "args": [
                 "--fix",
                 "-c",
