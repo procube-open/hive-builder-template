@@ -10,6 +10,8 @@ from google.cloud import compute_v1
 user = getpass.getuser()
 dir = os.path.dirname(__file__)
 
+# Ask questions
+print('--- Ask questions ---')
 try:
     def name_validation(base_answers, current):
         if len(current) == 0:
@@ -31,8 +33,7 @@ try:
     provider_questions = [
         inquirer.List('provider',
                       message="What provider do you want to use?",
-                      choices=['vagrant', 'gcp', 'aws',
-                               'azure', 'kickstart', 'prepared'],
+                      choices=['vagrant', 'gcp', 'aws', 'azure', 'kickstart', 'prepared'],
                       )
     ]
     provider_answers = inquirer.prompt(provider_questions, raise_keyboard_interrupt=True) or {}
@@ -41,6 +42,10 @@ try:
         inquirer.Text('cidr',
                       message="What's the CIDR?",
                       default='192.168.0.0/16'
+                      ),
+        inquirer.Text('internalcidr',
+                      message="What's the internal CIDR?",
+                      default='172.31.252.0/22'
                       ),
         inquirer.Confirm('separate_repository',
                          message="Do you want to use a separate repository?",
@@ -135,7 +140,7 @@ try:
                           ),
             inquirer.Text('repository_disk_size',
                           message="How much disk size do you want to use for repository?(GB)",
-                          default='20'
+                          default='40'
                           ),
         ]
         disk_size_answers = inquirer.prompt(disk_size_questions, raise_keyboard_interrupt=True) or {}
@@ -162,7 +167,7 @@ try:
 except KeyboardInterrupt:
     print('Setup is canceled')
     exit()
-
+print('--- Ask questions is done ---')
 
 subprocess.run(['hive', 'set', 'stage', base_answers['stage']])
 
@@ -181,7 +186,7 @@ if stage_answers['provider'] == 'vagrant':
         print('Vagrant is not installed')
         print('Automatically start installation after 3 seconds.')
         time.sleep(3)
-        subprocess.run([dir + '/install-vagrant.sh'], user=user)
+        subprocess.run([dir + '/scripts/install-vagrant.sh'], user=user)
         print('Vagrant is successfully installed')
     try:
         subprocess.run(['squid', '--version'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
@@ -189,7 +194,7 @@ if stage_answers['provider'] == 'vagrant':
         print('squid is not installed')
         print('Automatically start installation after 3 seconds.')
         time.sleep(3)
-        subprocess.run([dir + '/install-squid.sh'])
+        subprocess.run([dir + '/scripts/install-squid.sh'])
         print('squid is successfully installed')
     subprocess.run(['hive', 'set', 'vagrant_proxy', 'http://192.168.121.1:3128'])
 print('--- Install dependencies is done ---')
