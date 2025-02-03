@@ -176,7 +176,10 @@
                             }
                         },
                         "image": {
-                            "type": ["string", "object"],
+                            "type": [
+                                "string",
+                                "object"
+                            ],
                             "additionalProperties": false,
                             "properties": {
                                 "from": {
@@ -204,13 +207,19 @@
                                     "type": "string"
                                 },
                                 "entrypoint": {
-                                    "type": ["array" , "string"],
+                                    "type": [
+                                        "array",
+                                        "string"
+                                    ],
                                     "items": {
                                         "type": "string"
                                     }
                                 },
                                 "command": {
-                                    "type": ["array" , "string"],
+                                    "type": [
+                                        "array",
+                                        "string"
+                                    ],
                                     "items": {
                                         "type": "string"
                                     }
@@ -232,37 +241,40 @@
                             }
                         },
                         "backup_scripts": {
-                            "type": "object",
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "directory": {
-                                    "type": "string"
-                                },
-                                "backup_command": {
-                                    "type": "string"
-                                },
-                                "backup_file": {
-                                    "type": "string"
-                                },
-                                "restore_command": {
-                                    "type": "string"
-                                },
-                                "restore_file": {
-                                    "type": "string"
-                                },
-                                "ext": {
-                                    "type": "string"
-                                },
-                                "cleanup_days_before": {
-                                    "type": "number"
-                                },
-                                "batch_scripts": {
-                                    "type": "array",
-                                    "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "name": {
                                         "type": "string"
+                                    },
+                                    "directory": {
+                                        "type": "string"
+                                    },
+                                    "backup_command": {
+                                        "type": "string"
+                                    },
+                                    "backup_file": {
+                                        "type": "string"
+                                    },
+                                    "restore_command": {
+                                        "type": "string"
+                                    },
+                                    "restore_file": {
+                                        "type": "string"
+                                    },
+                                    "ext": {
+                                        "type": "string"
+                                    },
+                                    "cleanup_days_before": {
+                                        "type": "number"
+                                    },
+                                    "batch_scripts": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
