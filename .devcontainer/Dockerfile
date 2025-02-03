@@ -12,9 +12,14 @@ RUN chown -hR vscode:vscode /opt/hive
 
 # Install Python packages
 RUN /opt/hive/bin/pip install --upgrade pip
-RUN /opt/hive/bin/pip install ansible-core ansible-dev-tools setuptools hive-builder inquirer google-cloud-compute
+RUN /opt/hive/bin/pip install ansible-core ansible-dev-tools setuptools hive-builder inquirer google-cloud-compute PyGithub==2.5.0
 
 # Setup bash completion
 RUN echo "source \$(/opt/hive/bin/hive get-install-dir)/hive-completion.sh" >> /home/vscode/.bashrc
+
+# Patch PyGithub
+COPY PyGithub.patch /tmp/PyGithub.patch
+RUN patch $(/opt/hive/bin/pip show PyGithub | grep Location: | awk '{print $2}')/github/Repository.py < /tmp/PyGithub.patch
+RUN rm /tmp/PyGithub.patch
 
 ENTRYPOINT ["/sbin/init"]

@@ -3,6 +3,11 @@
     "dockerFile": "Dockerfile",
     "overrideCommand": false,
     "privileged": true,
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "latest"
+        }
+    },
     "remoteEnv": {
         "ANSIBLE_CONFIG": "/var/tmp/hive/ansible.cfg"
     },
