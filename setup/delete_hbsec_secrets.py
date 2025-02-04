@@ -1,5 +1,4 @@
 import os
-import base64
 from github import Github
 
 workdir = os.path.dirname(__file__) + "/.."
