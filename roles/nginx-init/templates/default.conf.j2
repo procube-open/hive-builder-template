@@ -4,7 +4,7 @@ server {
     server_name  localhost;
 
     location / {
-        proxy_pass http://redmine:3000;
+        proxy_pass http://{{ service_name }}:{{ service_port }};
     }
 
     error_page   500 502 503 504  /50x.html;
