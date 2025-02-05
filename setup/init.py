@@ -289,12 +289,6 @@ subprocess.run(['hive', 'set', 'stage', base_answers['stage']])
 
 # install dependencies
 print('--- Install dependencies ---')
-if not os.path.exists('.collections'):
-    print('Ansible collection is not installed')
-    print('Automatically start installation after 3 seconds.')
-    time.sleep(3)
-    subprocess.run(['hive', 'install-collection'])
-    print('Ansible collection is installed')
 if stage_answers['provider'] == 'vagrant':
     try:
         subprocess.run(['vagrant', '--version'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
@@ -325,6 +319,7 @@ if hive_yml['name'] != base_answers['name']:
     print('hive name is changed:' + hive_yml['name'] + ' -> ' + base_answers['name'])
     hive_yml['name'] = base_answers['name']
 if not hive_yml['stages']:
+    print('stages is added')
     hive_yml['stages'] = {}
 if not hive_yml['stages'][base_answers['stage']]:
     print('stage is added:' + base_answers['stage'])

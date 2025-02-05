@@ -6,6 +6,7 @@
     "remoteEnv": {
         "ANSIBLE_CONFIG": "/var/tmp/hive/ansible.cfg"
     },
+    "postCreateCommand": "${containerWorkspaceFolder}/setup/scripts/install-collection.sh ${containerWorkspaceFolder}",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -16,9 +17,6 @@
             "settings": {
                 "python.defaultInterpreterPath": "/opt/hive/bin/python",
                 "python.terminal.activateEnvInCurrentTerminal": true,
-                "autopep8.args": [
-                    "--max-line-length=200"
-                ],
                 "ansible.python.interpreterPath": "/opt/hive/bin/python",
                 "ansible.playbook.arguments": "-e @/var/tmp/hive/vars.yml",
                 "ansible.validation.lint.arguments": "-c .vscode/configs/ansible-lint.yml"
