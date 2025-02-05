@@ -1,2 +1,86 @@
 # hive-builder-template
-hive mother template on github codespaces
+
+Github Codespaces を用いて hive-builder を利用する際のテンプレートレポジトリです。
+hive-builder 本体についての詳細な利用法については[ドキュメント](https://hive-builder.readthedocs.io/ja/latest/)を参照して下さい。
+
+以下に記す手順に従うことで Codespaces の開発コンテナに hive-builder のマザー環境を構築することができます。
+
+## レポジトリを作成する
+
+codespaces を起動するためのレポジトリを作成します。
+本レポジトリのトップページの右上にある **Use this template** を押して、**Create a new repository**を選択することで、レポジトリ作成ページに移動します。
+
+## Codespaces を作成する
+作成したレポジトリのトップページから **Code** を押して、 **Codespaces** タブのプラスボタンを押すことで Codespaces が作成できます。
+
+### devcontainer
+
+Codespaces は `.devcontainer` フォルダを参照して開発コンテナを作成します。
+開発コンテナは大まかには以下の流れに従ってビルドされます。
+
+1. `mcr.microsoft.com/vscode/devcontainers/python:3`をベースイメージとしてpull する
+1. 各種パッケージをインストールする
+1. python の仮想環境を`/opt/hive`に作成する
+1. 仮想環境にhive-builder をインストールする
+1. systemd でコンテナを起動する
+
+上記の処理に 2~3 分ほど時間がかかります。 
+また、開発コンテナ作成時に `ansible-galaxy` のパッケージインストールが行われます。
+この影響で、コンテナ作成完了後も約5分ほど hive-builder を利用できません。
+
+## プロジェクトを編集する
+開発コンテナのワークスペースフォルダがそのまま hive-builder のプロジェクトディレクトリとなっています。
+
+また、デフォルトで `tmpl`という名前の hive 定義とサービス定義のサンプルが入っています。
+これを編集することで hive-builder を用いた構築が利用できます。
+
+## setup
+hive-builder を利用する上で利便性を向上させるためのスクリプトを`setup`ディレクトリ配下に置いています。
+それぞれ使い方について説明します。
+
+### init.py
+
+hive.yml の記述、依存パッケージのインストール、hive-builderの変数設定等を補助するPythonコードです。
+最初にベースとなる項目について質問し、それを回答することで hive.ymlが上書きされます。
+プロバイダがvagrantだったときは下に記す [Vagrant](#vagrantのインストール)と[Squid](#squid-のインストール)も自動で行われる他、stage変数の設定も行われます。
+
+### Vagrantのインストール
+
+`setup/scripts`配下に存在する`install-vagrant.sh`を実行することで開発コンテナに Vagrant をインストールすることができます。
+
+### Squid のインストール
+
+`setup/scripts`配下に存在する`install-squid.sh`を実行することで開発コンテナに Squid をインストールすることができます。
+
+Squid の設定を変更したい場合は `setup/files`配下にある`squid.conf`を編集してから再度実行することで反映できます。
+
+### 秘密情報の共有
+
+IaaSを用いて構築を行った時に生成された秘密情報を共有することができます。
+以下にその手順について記述します。
+
+#### アップロード側
+
+hive-builder で構築を行い、その秘密情報を共有したいユーザは、`setup/encrypt_secrets.py`を実行して下さい。
+
+これにより、ワークスペースフォルダ配下に`secrets.gpg`が生成されます。
+これをレポジトリにアップロードして下さい。
+
+##### `encrypt_secrets.py` の詳細
+
+`encrypt_secrets.py` では以下の操作を順に実行します。
+
+1. 秘密情報を`/tmp/secrets` ディレクトリ配下に集める
+1. secrets をzipで圧縮する
+1. ランダムな文字列を生成する
+1. 生成した文字列をパスワードとして、圧縮したzipファイルを GPG で暗号化する
+1. パスワードを Github Secrets の Codespaces 領域に保存する
+1. `/tmp` 配下に置いていたディレクトリを削除する
+
+#### ダウンロード側
+
+レポジトリに secrets.gpg が存在し、これを使って秘密情報を復号したいユーザは`setup/decrypt_secrets.py`を実行して下さい。
+
+これにより、ワークスペースフォルダ配下に秘密情報ファイルが配置されます。
+また、すでに同名のファイルが存在した場合は上書きの確認が行われます。
+
