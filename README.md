@@ -91,3 +91,7 @@ hive-builder で構築を行い、その秘密情報を共有したいユーザ�
 1. `HBSEC_PASSPHRASE`環境変数を参照して`secrets.gpg`の復号を行う
 1. zipファイルが生成されるのでこれを解凍する
 1. ファイルを適切な位置にコピーする
+
+#### 秘密情報の削除
+
+秘密情報の共有をやめたい場合は、レポジトリの `secrets.gpg`を削除して下さい。また、`setup/delete_hbsec_secrets.py`を実行することで`HBSEC_`という接頭辞の Github Secrets を全て削除できます。
