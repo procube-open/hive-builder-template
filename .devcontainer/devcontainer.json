@@ -6,7 +6,6 @@
     "remoteEnv": {
         "ANSIBLE_CONFIG": "/var/tmp/hive/ansible.cfg"
     },
-    "postCreateCommand": "setup/scripts/install-docker.sh",
     "customizations": {
         "vscode": {
             "extensions": [
