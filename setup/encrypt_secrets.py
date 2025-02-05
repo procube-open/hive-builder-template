@@ -15,6 +15,10 @@ stages = ["private", "staging", "production"]
 skip_files = ["Vagrantfile", "vagrant.log", "vagrant_vars.yml", "growfs.sh", ".vagrant"]
 
 # Create secrets.zip
+if os.path.exists(tmpdir + '/secrets'):
+    shutil.rmtree(tmpdir + '/secrets')
+if os.path.exists(tmpdir + '/secrets.zip'):
+    os.remove(tmpdir + '/secrets.zip')
 os.makedirs(tmpdir + '/secrets', exist_ok=True)
 for secret in workdir_secrets:
     if os.path.exists(workdir + '/' + secret):
@@ -41,7 +45,7 @@ print("secrets.zip created")
 length = 32
 characters = string.ascii_letters + string.digits + string.punctuation
 passphrase = ''.join(random.choice(characters) for i in range(length))
-print("Generated passphrase: " + passphrase)
+print("passphrase generated: " + passphrase)
 
 # Encrypt secrets.zip
 os.makedirs(tmpdir + '/.gnupg', exist_ok=True)
@@ -53,7 +57,7 @@ print("secrets.zip encrypted to secrets.gpg with passphrase")
 
 # Export HBSEC_PASSPHRASE
 repo.create_secret("HBSEC_PASSPHRASE", passphrase, "codespaces")
-print("HBSEC_PASSPHRASE exported")
+print("passphrase exported to HBSEC_PASSPHRASE")
 
 # Remove temporary files
 shutil.rmtree(tmpdir + '/secrets')
