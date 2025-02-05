@@ -11,7 +11,8 @@
         "vscode": {
             "extensions": [
                 "redhat.ansible",
-                "redhat.vscode-yaml"
+                "redhat.vscode-yaml",
+                "ms-azuretools.vscode-docker"
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/opt/hive/bin/python",
