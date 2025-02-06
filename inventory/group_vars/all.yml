@@ -1,6 +1,6 @@
 ---
 # Secrets
-secrets: "{{ lookup('file', '/workspaces/hive-builder-template/secrets.yml') | from_yaml | default({}) }}"
+secrets: "{{ lookup('file', inventory_dir | dirname + '/secrets.yml') | from_yaml | default({}) }}"
 
 # DRBD
 hive_kernel_version: 5.14.0-503.15.1.el9_5.x86_64

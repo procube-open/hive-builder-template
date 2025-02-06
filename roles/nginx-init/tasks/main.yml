@@ -1,5 +1,4 @@
 ---
-
 - name: "Template Nginx Configuration"
   ansible.builtin.template:
     src: "default.conf.j2"
