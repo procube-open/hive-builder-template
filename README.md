@@ -94,8 +94,8 @@ hive-builder で構築を行い、その秘密情報を共有したいユーザ�
 
 # Vagrant の利用
 
-本レポジトリを用いて Vagrant を利用する場合、Vagrant コンテナ内から外部ネットワークと内部ネットワークには接続することができません。
-このため、外部ネットワークに接続する際は Squid などのプロキシサーバに接続し、内部ネットワークは利用しない1台構成(number_pf_hosts を1に設定する構成)にとどめて下さい。
+本レポジトリを用いて Vagrant を利用する場合、Vagrant コンテナ内から外部ネットワークと Vagrant内部ネットワークには接続することができません。
+このため、外部ネットワークに接続する際は Squid などのプロキシサーバに接続し、Vagrant内部ネットワークは利用しない1台構成(number_pf_hosts を1に設定する構成)にとどめて下さい。
 
 ## Vagrantのインストール
 
@@ -107,18 +107,29 @@ hive-builder で構築を行い、その秘密情報を共有したいユーザ�
 
 Squid の設定を変更したい場合は `setup/files`配下にある`squid.conf`を編集してから再度実行することで反映できます。
 
-# Ansible Playbook の記述
+# vscode によるサポート
+
+vscodeの機能を用いて hive-builder の構築のサポートを行なっています。以下に紹介していきます。
+
+## Ansible Playbook の記述
 
 `roles` ディレクトリ配下に存在するAnsible Playbook の記述をサポートする各種拡張機能が導入されています。
 
 validation チェックは ansible-lint という python パッケージにより行われており、これのコンフィグYAMLは `.vscode/configs/ansible-lint.yml` を参照しています。ansible-lintの設定例については[公式ドキュメント](https://ansible.readthedocs.io/projects/lint/configuring/#specifying-configuration-files)を参照して下さい。
+そもそも validation チェックが必要ないという場合は `.vscode/settings.json`の`ansible.validation.lint.enabled`を`false`に設定して下さい。
 
-## キーボードショートカットの追加
+### キーボードショートカットの追加
 
 ansible 拡張機能には自動修正機能がついていません。
 ansible-lint による自動修正機能を使いたい場合はキーボードショートカットを追加して下さい。
 
 `.vscode/keybindings-example.json`をキーボードショートカットの`keybindings.json`にコピーペーストすることで、 Playbook のyamlファイルを開いている時に`shift + alt + f`で自動修正タスクが実行されるようになります。
 
-# JSON Schema
+## JSON Schema
 inventory 配下に存在するhive定義yamlや、サービス定義yamlに対して JSON Schema が適用されています。サービス定義yamlは、デフォルトでは `inventory/services.yml`のみに適用されていますが、これを追加する場合は`.vscode/settings.json`を編集して下さい。
+
+## ポートフォワーディング
+
+vscode を用いたポートフォワーディングも可能です。
+建てたサービスコンテナにブラウザでアクセスしたい場合は`hive ssh -L {コンテナ側ポート}:0.0.0.0:{ブラウザ側ポート}`でポートフォワーディングが可能です。
+ポートタブに新しくブラウザ側ポートのリンクが追加されているので、これをクリックしてアクセスすることができます。
