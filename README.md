@@ -3,12 +3,15 @@
 Github Codespaces を用いて hive-builder を利用する際のテンプレートレポジトリです。
 hive-builder 本体についての詳細な利用法については[ドキュメント](https://hive-builder.readthedocs.io/ja/latest/)を参照して下さい。
 
+# 構築手順
 以下に記す手順に従うことで Codespaces の開発コンテナに hive-builder のマザー環境を構築することができます。
 
 ## レポジトリを作成する
 
 codespaces を起動するためのレポジトリを作成します。
 本レポジトリのトップページの右上にある **Use this template** を押して、**Create a new repository**を選択することで、レポジトリ作成ページに移動します。
+
+レポジトリ名などの必要な情報を入力してレポジトリを作成して下さい。
 
 ## Codespaces を作成する
 作成したレポジトリのトップページから **Code** を押して、 **Codespaces** タブのプラスボタンを押すことで Codespaces が作成できます。
@@ -34,39 +37,32 @@ Codespaces は `.devcontainer` フォルダを参照して開発コンテナを�
 また、デフォルトで `tmpl`という名前の hive 定義とサービス定義のサンプルが入っています。
 これを編集することで hive-builder を用いた構築が利用できます。
 
-## setup
+以上の手順終了後はこのファイルを適宜削除/修正してREADME.mdを記述して下さい。
+
+# setup
 hive-builder を利用する上で利便性を向上させるためのスクリプトを`setup`ディレクトリ配下に置いています。
 それぞれ使い方について説明します。
 
-### init.py
+## init.py
 
 hive.yml の記述、依存パッケージのインストール、hive-builderの変数設定等を補助するPythonコードです。
 最初にベースとなる項目について質問し、それを回答することで hive.ymlが上書きされます。
-プロバイダがvagrantだったときは下に記す [Vagrant](#vagrantのインストール)と[Squid](#squid-のインストール)も自動で行われる他、stage変数の設定も行われます。
+プロバイダがvagrantだったときは後述する [Vagrant](#vagrantのインストール)と[Squid](#squid-のインストール)のインストールも自動で行われる他、stage変数の設定も行われます。
 
-### Vagrantのインストール
 
-`setup/scripts`配下に存在する`install-vagrant.sh`を実行することで開発コンテナに Vagrant をインストールすることができます。
-
-### Squid のインストール
-
-`setup/scripts`配下に存在する`install-squid.sh`を実行することで開発コンテナに Squid をインストールすることができます。
-
-Squid の設定を変更したい場合は `setup/files`配下にある`squid.conf`を編集してから再度実行することで反映できます。
-
-### 秘密情報の共有
+## 秘密情報の共有
 
 IaaSを用いて構築を行った時に生成された秘密情報を共有することができます。
 以下にその手順について記述します。
 
-#### アップロード側
+### アップロード側
 
 hive-builder で構築を行い、その秘密情報を共有したいユーザは、`setup/encrypt_secrets.py`を実行して下さい。
 
 これにより、ワークスペースフォルダ配下に`secrets.gpg`が生成されます。
 これをレポジトリにアップロードして下さい。
 
-##### `encrypt_secrets.py` の詳細
+#### `encrypt_secrets.py` の詳細
 
 `encrypt_secrets.py` では以下の操作を順に実行します。
 
@@ -77,14 +73,14 @@ hive-builder で構築を行い、その秘密情報を共有したいユーザ�
 1. パスワードを Github Secrets の Codespaces 領域に `HBSEC_PASSPHRASE`として保存する
 1. `/tmp` 配下に置いていたディレクトリを削除する
 
-#### ダウンロード側
+### ダウンロード側
 
 レポジトリに secrets.gpg が存在し、これを使って秘密情報を復号したいユーザは`setup/decrypt_secrets.py`を実行して下さい。
 
 これにより、ワークスペースフォルダ配下に秘密情報ファイルが配置されます。
 また、すでに同名のファイルが存在した場合は上書きの確認が行われます。
 
-##### `decrypt_secrets.py` の詳細
+#### `decrypt_secrets.py` の詳細
 
 `decrypt_secrets.py` では以下の操作を順に実行します。
 
@@ -92,6 +88,37 @@ hive-builder で構築を行い、その秘密情報を共有したいユーザ�
 1. zipファイルが生成されるのでこれを解凍する
 1. ファイルを適切な位置にコピーする
 
-#### 秘密情報の削除
+### 秘密情報の削除
 
 秘密情報の共有をやめたい場合は、レポジトリの `secrets.gpg`を削除して下さい。また、`setup/delete_hbsec_secrets.py`を実行することで`HBSEC_`という接頭辞の Github Secrets を全て削除できます。
+
+# Vagrant の利用
+
+本レポジトリを用いて Vagrant を利用する場合、Vagrant コンテナ内から外部ネットワークと内部ネットワークには接続することができません。
+このため、外部ネットワークに接続する際は Squid などのプロキシサーバに接続し、内部ネットワークは利用しない1台構成(number_pf_hosts を1に設定する構成)にとどめて下さい。
+
+## Vagrantのインストール
+
+`setup/scripts`配下に存在する`install-vagrant.sh`を実行することで開発コンテナに Vagrant をインストールすることができます。
+
+## Squid のインストール
+
+`setup/scripts`配下に存在する`install-squid.sh`を実行することで開発コンテナに Squid をインストールすることができます。
+
+Squid の設定を変更したい場合は `setup/files`配下にある`squid.conf`を編集してから再度実行することで反映できます。
+
+# Ansible Playbook の記述
+
+`roles` ディレクトリ配下に存在するAnsible Playbook の記述をサポートする各種拡張機能が導入されています。
+
+validation チェックは ansible-lint という python パッケージにより行われており、これのコンフィグYAMLは `.vscode/configs/ansible-lint.yml` を参照しています。ansible-lintの設定例については[公式ドキュメント](https://ansible.readthedocs.io/projects/lint/configuring/#specifying-configuration-files)を参照して下さい。
+
+## キーボードショートカットの追加
+
+ansible 拡張機能には自動修正機能がついていません。
+ansible-lint による自動修正機能を使いたい場合はキーボードショートカットを追加して下さい。
+
+`.vscode/keybindings-example.json`をキーボードショートカットの`keybindings.json`にコピーペーストすることで、 Playbook のyamlファイルを開いている時に`shift + alt + f`で自動修正タスクが実行されるようになります。
+
+# JSON Schema
+inventory 配下に存在するhive定義yamlや、サービス定義yamlに対して JSON Schema が適用されています。サービス定義yamlは、デフォルトでは `inventory/services.yml`のみに適用されていますが、これを追加する場合は`.vscode/settings.json`を編集して下さい。
