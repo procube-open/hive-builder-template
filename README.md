@@ -126,7 +126,7 @@ ansible-lint による自動修正機能を使いたい場合はキーボード�
 `.vscode/keybindings-example.json`をキーボードショートカットの`keybindings.json`にコピーペーストすることで、 Playbook のyamlファイルを開いている時に`shift + alt + f`で自動修正タスクが実行されるようになります。
 
 ## JSON Schema
-inventory 配下に存在するhive定義yamlや、サービス定義yamlに対して JSON Schema が適用されています。サービス定義yamlは、デフォルトでは `inventory/services.yml`のみに適用されていますが、これを追加する場合は`.vscode/settings.json`を編集して下さい。
+inventory 配下に存在するhive定義yamlや、サービス定義yamlに対して JSON Schema が適用されています。デフォルトの設定では `inventory/hive.yml` に対して hive定義yaml の JSON Schema を適用し、それ以外の `inventory` 配下に存在する `yml` ファイルに対してサービス定義yaml の JSON Schema を適用します。 
 
 ## ポートフォワーディング
 
