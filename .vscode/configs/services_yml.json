@@ -46,8 +46,8 @@
                         "endpoint_mode": {
                             "type": "string",
                             "enum": [
-                                "DNSRR",
-                                "VIP"
+                                "dnsrr",
+                                "vip"
                             ]
                         },
                         "entrypoint": {
