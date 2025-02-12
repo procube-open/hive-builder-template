@@ -11,6 +11,9 @@
     "yaml.hover": true,
     "yaml.schemas": {
         ".vscode/configs/hive_yml.json": "inventory/hive.yml",
-        ".vscode/configs/services_yml.json": "inventory/services.yml"
+        ".vscode/configs/services_yml.json": [
+            "inventory/*.yml",
+            "!inventory/hive.yml"
+        ]
     }
 }
