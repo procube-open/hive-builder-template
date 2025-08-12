@@ -24,7 +24,8 @@ RUN chown -hR vscode:vscode /opt/hive
 
 # Install Python packages
 RUN /opt/hive/bin/pip install --upgrade pip
-RUN /opt/hive/bin/pip install ansible-core ansible-dev-tools setuptools hive-builder inquirer google-cloud-compute PyGithub==2.5.0
+# ansible-core>=2.19.0 でyamlのパースに失敗するため、バージョンを下げる
+RUN /opt/hive/bin/pip install 'ansible-core<2.19.0' ansible-dev-tools setuptools hive-builder inquirer google-cloud-compute 'PyGithub==2.5.0'
 
 # Patch PyGithub
 COPY PyGithub.patch /tmp/PyGithub.patch
