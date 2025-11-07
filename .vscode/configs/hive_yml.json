@@ -199,6 +199,20 @@
               }
             }
           }
+        },
+        "shared_repository": {
+          "type": "object",
+          "properties": {
+            "context_dir": {
+              "type": "string"
+            },
+            "dns_address": {
+              "type": "string"
+            },
+            "ssh_port": {
+              "type": "number"
+            }
+          }
         }
       }
     }
