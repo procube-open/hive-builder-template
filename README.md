@@ -94,8 +94,18 @@ hive-builder で構築を行い、その秘密情報を共有したいユーザ�
 
 # Vagrant の利用
 
-本レポジトリを用いて Vagrant を利用する場合、Vagrant コンテナ内から外部ネットワークと Vagrant内部ネットワークには接続することができません。
+本レポジトリを用いて Vagrant を利用する場合、開発コンテナをsystemdで起動する必要があります。
+また、Vagrant コンテナ内から外部ネットワークと Vagrant内部ネットワークには接続することができません。
 このため、外部ネットワークに接続する際は Squid などのプロキシサーバに接続し、Vagrant内部ネットワークは利用しない1台構成(number_of_hosts を1に設定する構成)にとどめて下さい。
+
+## 開発コンテナの切り替え
+
+Vagrant を利用する場合は systemd 有効化済みの開発コンテナを利用する必要があります。
+.devcontainer-vagrantディレクトリを.devcontainerにリネームしてから Codespaces を再起動して下さい。
+```
+mv .devcontainer .devcontainer-backup
+mv .devcontainer-vagrant .devcontainer
+```
 
 ## Vagrantのインストール
 

@@ -1,25 +1,12 @@
 {
     "name": "hive-builder template container",
-    "image": "mcr.microsoft.com/devcontainers/python:3",
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {
-            "version": "latest",
-            "moby": false,
-            "dockerDashComposeVersion": "v2"
-        },
-        "ghcr.io/devcontainers/features/common-utils:2": {
-            "installZsh": false,
-            "installOhMyZsh": false,
-            "upgradePackages": true,
-            "username": "vscode",
-            "userUid": "automatic",
-            "userGid": "automatic"
-        }
-    },
+    "dockerFile": "Dockerfile",
+    "overrideCommand": false,
+    "privileged": true,
     "remoteEnv": {
         "ANSIBLE_CONFIG": "/var/tmp/hive/ansible.cfg"
     },
-    "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",
+    "postCreateCommand": "${containerWorkspaceFolder}/setup/scripts/install-collection.sh ${containerWorkspaceFolder}",
     "customizations": {
         "vscode": {
             "extensions": [
