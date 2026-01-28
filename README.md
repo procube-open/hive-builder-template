@@ -1,9 +1,10 @@
 # hive-builder-template
 
-Github Codespaces を用いて hive-builder を利用する際のテンプレートレポジトリです。
+hive-builder を利用する際のテンプレートレポジトリです。
 hive-builder 本体についての詳細な利用法については[ドキュメント](https://hive-builder.readthedocs.io/ja/latest/)を参照して下さい。
 
 # 構築手順
+Github Codespacesでの構築を例に解説します。
 以下に記す手順に従うことで Codespaces の開発コンテナに hive-builder のマザー環境を構築することができます。
 
 ## レポジトリを作成する
@@ -52,7 +53,8 @@ hive.yml の記述、依存パッケージのインストール、hive-builder�
 
 ## 秘密情報の共有
 
-IaaSを用いて構築を行った時に生成された秘密情報を共有することができます。
+hive-builderによる構築を行った際に生成された秘密情報をレポジトリを介して共有することができます。
+共有する場合はCodespaces、もしくはHBSEC_PASSPHRASE環境変数が設定された環境である必要があります。
 以下にその手順について記述します。
 
 ### アップロード側
@@ -63,14 +65,20 @@ hive-builder で構築を行い、その秘密情報を共有したいユーザ�
 これをレポジトリにアップロードして下さい。
 
 #### `encrypt_secrets.py` の詳細
-
 `encrypt_secrets.py` では以下の操作を順に実行します。
 
+**Codespacesの場合**
 1. 秘密情報を`/tmp/secrets` ディレクトリ配下に集める
 1. secrets をzipで圧縮する
 1. ランダムな文字列を生成する
 1. 生成した文字列をパスワードとして、圧縮したzipファイルを GPG で暗号化する
 1. パスワードを Github Secrets の Codespaces 領域に `HBSEC_PASSPHRASE`として保存する
+1. `/tmp` 配下に置いていたディレクトリを削除する
+
+**HBSEC_PASSPHRASE定義環境の場合**
+1. 秘密情報を`/tmp/secrets` ディレクトリ配下に集める
+1. secrets をzipで圧縮する
+1. HBSEC_PASSPHRASEをパスワードとして、圧縮したzipファイルを GPG で暗号化する
 1. `/tmp` 配下に置いていたディレクトリを削除する
 
 ### ダウンロード側

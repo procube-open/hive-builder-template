@@ -13,12 +13,18 @@ secrets_dir = os.path.join(tmpdir, 'secrets')
 secrets_zip = os.path.join(tmpdir, 'secrets.zip')
 gnupg_home = os.path.join(tmpdir, '.gnupg')
 
-try:
-    gh = Github(os.environ['GITHUB_TOKEN'])
-    repo = gh.get_repo(os.environ['GITHUB_REPOSITORY'])
-except KeyError as e:
-    print(f"Environment variable {e} is not set.", file=sys.stderr)
-    sys.exit(1)
+gh = None
+repo = None
+github_token = os.environ.get('GITHUB_TOKEN')
+github_repo = os.environ.get('GITHUB_REPOSITORY')
+if github_token and github_repo:
+    try:
+        gh = Github(github_token)
+        repo = gh.get_repo(github_repo)
+    except Exception as e:
+        print(f"Failed to initialize GitHub client: {e}", file=sys.stderr)
+        gh = None
+        repo = None
 
 workdir_secrets = ['secrets.yml', 'gcp_credential.json', '.env']
 stages = ["private", "staging", "production"]
@@ -61,11 +67,16 @@ try:
     subprocess.run(['zip', '-r', 'secrets.zip', 'secrets'], stdout=subprocess.DEVNULL, cwd=tmpdir, check=True)
     print("secrets.zip created")
 
-    # Generate passphrase
-    length = 32
-    characters = string.ascii_letters + string.digits + string.punctuation
-    passphrase = ''.join(random.choice(characters) for i in range(length))
-    print("passphrase generated")
+    # Generate or use predefined passphrase
+    env_passphrase = os.environ.get("HBSEC_PASSPHRASE")
+    if env_passphrase:
+        passphrase = env_passphrase
+        print("passphrase loaded from HBSEC_PASSPHRASE")
+    else:
+        length = 32
+        characters = string.ascii_letters + string.digits + string.punctuation
+        passphrase = ''.join(random.choice(characters) for i in range(length))
+        print("passphrase generated")
 
     # Encrypt secrets.zip
     os.makedirs(gnupg_home, exist_ok=True)
@@ -81,15 +92,16 @@ try:
         sys.exit(1)
     print("secrets.zip encrypted to secrets.gpg with passphrase")
 
-    # Export HBSEC_PASSPHRASE
-    try:
-        repo.create_secret("HBSEC_PASSPHRASE", passphrase, "codespaces")
-        print("passphrase exported to GitHub repository secret HBSEC_PASSPHRASE")
-    except GithubException as e:
-        print(f"Failed to create GitHub secret: {e}", file=sys.stderr)
-        print("Please set the passphrase manually as a repository secret 'HBSEC_PASSPHRASE'.", file=sys.stderr)
-        print(f"PASSPHRASE: {passphrase}")
-        sys.exit(1)
+    # Export HBSEC_PASSPHRASE when GitHub is available
+    if repo is not None:
+        try:
+            repo.create_secret("HBSEC_PASSPHRASE", passphrase, "codespaces")
+            print("passphrase exported to GitHub repository secret HBSEC_PASSPHRASE")
+        except GithubException as e:
+            print(f"Failed to create GitHub secret: {e}", file=sys.stderr)
+            print("Please set the passphrase manually as a repository secret 'HBSEC_PASSPHRASE'.", file=sys.stderr)
+            print(f"PASSPHRASE: {passphrase}")
+            sys.exit(1)
 
 finally:
     # Remove temporary files
