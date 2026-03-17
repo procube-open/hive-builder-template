@@ -4,9 +4,10 @@
     "overrideCommand": false,
     "privileged": true,
     "remoteEnv": {
-        "ANSIBLE_CONFIG": "/var/tmp/hive/ansible.cfg"
+        "ANSIBLE_CONFIG": "/var/tmp/hive/ansible.cfg",
+        "PATH": "${containerWorkspaceFolder}/.venv/bin:${containerEnv:PATH}"
     },
-    "postCreateCommand": "${containerWorkspaceFolder}/setup/scripts/install-collection.sh ${containerWorkspaceFolder}",
+    "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer-systemd/post-create.sh",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -15,9 +16,6 @@
                 "ms-azuretools.vscode-docker"
             ],
             "settings": {
-                "python.defaultInterpreterPath": "/opt/hive/bin/python",
-                "python.terminal.activateEnvInCurrentTerminal": true,
-                "ansible.python.interpreterPath": "/opt/hive/bin/python",
                 "ansible.playbook.arguments": "-e @/var/tmp/hive/vars.yml",
                 "ansible.validation.lint.arguments": "-c .vscode/configs/ansible-lint.yml"
             }

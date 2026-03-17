@@ -1,8 +1,4 @@
 {
-    "python.analysis.typeCheckingMode": "standard",
-    "autopep8.args": [
-        "--max-line-length=200"
-    ],
     "ansible.ansible.useFullyQualifiedCollectionNames": true,
     "ansible.validation.lint.enabled": true,
     "yaml.format.enable": true,
@@ -15,5 +11,7 @@
             "inventory/*.yml",
             "!inventory/hive.yml"
         ]
-    }
+    },
+    "github.copilot.chat.responsesApiReasoningEffort": "xhigh",
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }

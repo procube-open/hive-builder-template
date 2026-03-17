@@ -1,5 +1,5 @@
---- /opt/hive/lib/python3.13/site-packages/github/Repository.py.org	2025-02-03 05:57:09.100210609 +0000
-+++ /opt/hive/lib/python3.13/site-packages/github/Repository.py	2025-02-03 06:01:08.852208130 +0000
+--- a/github/Repository.py
++++ b/github/Repository.py
 @@ -1750,7 +1750,7 @@
          """
          assert isinstance(secret_name, str), secret_name
